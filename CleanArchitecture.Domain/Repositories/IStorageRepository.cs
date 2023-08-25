@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Domain.Repositories
+﻿using CleanArchitecture.Domain.Entities;
+
+namespace CleanArchitecture.Domain.Repositories
 {
     public interface IStorageRepository : IRepository<Storage>
     {

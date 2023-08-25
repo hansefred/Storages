@@ -2,7 +2,7 @@
 using OneOf;
 
 
-namespace CleanArchitecture.Domain;
+namespace CleanArchitecture.Domain.Entities;
 
 
 public class Storage : AggregateRoot
@@ -12,6 +12,7 @@ public class Storage : AggregateRoot
     {
         Name = name;
         Description = description;
+        _articles = new List<StorageArticle>();
     }
 
     private List<StorageArticle> _articles;

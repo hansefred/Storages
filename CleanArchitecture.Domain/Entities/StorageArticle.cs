@@ -1,6 +1,6 @@
 ﻿using OneOf;
 
-namespace CleanArchitecture.Domain;
+namespace CleanArchitecture.Domain.Entities;
 
 public class StorageArticle : Entity
 {

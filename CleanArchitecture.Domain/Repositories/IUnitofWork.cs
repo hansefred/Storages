@@ -2,6 +2,7 @@
 {
     public interface IUnitofWork 
     {
+        IStorageRepository StorageRepository { get; }
         void Commit();
     }
 }
