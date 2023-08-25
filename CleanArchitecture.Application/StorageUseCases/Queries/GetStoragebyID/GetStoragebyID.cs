@@ -1,4 +1,7 @@
 ﻿using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.DTO;
+using CleanArchitecture.Application.Exceptions;
+using CleanArchitecture.Application.StorageUseCases.Queries.GetStorages;
 using CleanArchitecture.Domain.Repositories;
 using MediatR;
 
@@ -33,11 +36,6 @@ namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStoragebyID
         async Task<IResult<StorageDto>> IRequestHandler<GetStorageByIdQuery, IResult<StorageDto>>.Handle(GetStorageByIdQuery request, CancellationToken cancellationToken)
         {
 
-            if (ValidatorHelper.Validate<GetStoragebyIDValidator, GetStorageByIdQuery, StorageDto>(request, out var ValidationErrorResult))
-            {
-                return ValidationErrorResult!;
-            }
-
             var storage = await storageRepository.GetById(request.Id, cancellationToken);
 
             if (storage is not null)
@@ -45,7 +43,7 @@ namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStoragebyID
                 return TResult<StorageDto>.OnSuccess(new StorageDto(storage));
             }
 
-            return TResult<StorageDto>.OnError($"Cannot find Storage with Id: {request.Id}");
+            return TResult<StorageDto>.OnError(new StorageNotFoundException($"Cannot find Storage with Id: {request.Id}"));
 
 
         }

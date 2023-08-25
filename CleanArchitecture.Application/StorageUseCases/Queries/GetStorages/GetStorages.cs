@@ -1,9 +1,10 @@
-﻿using CleanArchitecture.Domain.Repositories;
+﻿using CleanArchitecture.Application.DTO;
+using CleanArchitecture.Domain.Repositories;
 using MediatR;
 
-namespace CleanArchitecture.Application.StorageUseCases.Queries
+namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStorages
 {
-    public record GetStoragesQuery: IRequest<IEnumerable<StorageDto>>;
+    public record GetStoragesQuery : IRequest<IEnumerable<StorageDto>>;
     internal class GetStorages : IRequestHandler<GetStoragesQuery, IEnumerable<StorageDto>>
     {
         public readonly IStorageRepository storageRepository;

@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Application.Common
+﻿using CleanArchitecture.Application.Exceptions;
+
+namespace CleanArchitecture.Application.Common
 {
     class TResult<T> : IResult<T>
     {
@@ -9,13 +11,14 @@
         }
         public bool Success { get; set; }
         public T? Result { get; set; }
-        public string? Error { get; set; }
+        public IApplicationException? Error { get; set; }
 
-        public static TResult<T> OnError(string message)
+
+        public static TResult<T> OnError(IApplicationException ex)
         {
             var result = new TResult<T>();
             result.Success = false;
-            result.Error = message;
+            result.Error = ex;
             return result;
 
         }

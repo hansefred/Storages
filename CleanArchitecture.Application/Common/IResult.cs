@@ -1,8 +1,10 @@
-﻿namespace CleanArchitecture.Application.Common
+﻿using CleanArchitecture.Application.Exceptions;
+
+namespace CleanArchitecture.Application.Common
 {
     public interface IResult<T>
     {
-        string? Error { get; set; }
+        IApplicationException? Error { get; set; }
         T? Result { get; set; }
         bool Success { get; set; }
     }

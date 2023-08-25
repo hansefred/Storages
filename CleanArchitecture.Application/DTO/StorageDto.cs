@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.StorageUseCases
+namespace CleanArchitecture.Application.DTO
 {
     internal class StorageDto
     {

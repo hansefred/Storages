@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Domain.Primitives;
-using OneOf;
 
 
 namespace CleanArchitecture.Domain.Entities;
@@ -21,18 +20,40 @@ public class Storage : AggregateRoot
     public string Name { get; private set;}
     public string Description { get; private set;}
 
-    public static OneOf<Storage,StorageNameIsOutofRangeDomainException, StorageDescriptionIsOutofRangeDomainException> Create (Guid id, string name, string description)
+    /// <summary>
+    /// Create a new Entity from Storage
+    /// </summary>
+    /// <param name="id">ID of Entity</param>
+    /// <param name="name">Name of the Storage</param>
+    /// <param name="description">Description of the Storage</param>
+    /// <returns>Returns a ITResult, contains Error or new Entity </returns>
+    public static ITResult<Storage> Create (Guid id, string name, string description)
     {
        if (name is null || name.Length < 5 || name.Length > 49)
        {
-            return new StorageNameIsOutofRangeDomainException ("Storage Name must be betwenn 5 and 49 Chars");
+            return TResult<Storage>.OnError(new StorageNameIsOutofRangeDomainException("Storage Name must be betwenn 5 and 49 Chars"));
        }
        if (description is null || description.Length > 149)
        {
-            return new StorageDescriptionIsOutofRangeDomainException ("Storage Description can't be longer than 149 Chars");
+            return TResult<Storage>.OnError(new StorageDescriptionIsOutofRangeDomainException("Storage Description can't be longer than 149 Chars"));
        }
 
-       return new Storage (id, name, description);
+       return TResult<Storage>.OnSuccess(new Storage(id, name, description));
+    }
+
+    public ITResult<Storage> AddArticleToStorage(string articleName, string articleDescription)
+    {
+        var result = StorageArticle.Create(Guid.NewGuid(), articleName, articleDescription);
+        if (result.IsSuccess)
+        {
+            var article = result.Result!;
+            _articles.Add(article);
+            article.Storage = this;
+
+            return TResult<Storage>.OnSuccess(this);
+        }
+
+        return TResult<Storage>.OnError(result.DomainException!);
     }
 }
 

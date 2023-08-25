@@ -2,6 +2,8 @@
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.DTO;
+using CleanArchitecture.Application.Exceptions;
 
 namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
 {
@@ -21,17 +23,11 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
 
         public async  Task<IResult<StorageDto>> Handle(CreateStorageCommand request, CancellationToken cancellationToken)
         {
-           if (ValidatorHelper.Validate<CreateStorageCommandValidator, CreateStorageCommand,StorageDto>(request, out var ValidationErrorResult))
-            {
-                return ValidationErrorResult!;
-            }
-
-            var oneOf = Storage.Create(Guid.NewGuid(), request.Name!, request.Description!);
-
+            var result = Storage.Create(Guid.NewGuid(), request.Name!, request.Description!);
             //Execute Handle
-            if (oneOf.IsT0)
+            if (result.IsSuccess)
             {
-                var storage = oneOf.AsT0;
+                var storage = result.Result!;
                 try
                 {
                     await unitofWork.StorageRepository.Add(storage);
@@ -39,13 +35,12 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
                 }
                 catch (Exception ex)
                 {
-                    TResult<StorageDto>.OnError(ex.Message);
+                    TResult<StorageDto>.OnError(new StorageApplicationErrorException(ex));
                 }
 
             }
-
             //Handle Domain Errors
-            return OneOfHelper.HandleError<StorageDto>(oneOf);
+            return TResult<StorageDto>.OnError(new StorageApplicationErrorException(result!.DomainException!.ErrorMessage));
 
         }
     }
