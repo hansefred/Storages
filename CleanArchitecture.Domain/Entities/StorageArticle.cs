@@ -25,7 +25,7 @@ public class StorageArticle : Entity
     /// <param name="id">ID of new Entity</param>
     /// <param name="articleName">Aricle Name of new Entity</param>
     /// <param name="description">Description of new Entity</param>
-    /// <returns></returns>
+    /// <returns>Returns a ITResult, contains error or new entity</returns>
     internal static ITResult<StorageArticle> Create (Guid id, string articleName, string description)
     {
       if (articleName is null || articleName.Length < 5 || articleName.Length > 49)
