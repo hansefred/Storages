@@ -26,7 +26,7 @@ public class Storage : AggregateRoot
     /// <param name="id">ID of Entity</param>
     /// <param name="name">Name of the Storage</param>
     /// <param name="description">Description of the Storage</param>
-    /// <returns>Returns a ITResult, contains Error or new Entity </returns>
+    /// <returns>Returns a ITResult, contains error or new entity </returns>
     public static ITResult<Storage> Create (Guid id, string name, string description)
     {
        if (name is null || name.Length < 5 || name.Length > 49)
@@ -41,6 +41,13 @@ public class Storage : AggregateRoot
        return TResult<Storage>.OnSuccess(new Storage(id, name, description));
     }
 
+
+    /// <summary>
+    /// Create a article and add it to storage 
+    /// </summary>
+    /// <param name="articleName">Name of the new article</param>
+    /// <param name="articleDescription">Description of the new article</param>
+    /// <returns>>Returns a ITResult, contains error or new entity</returns>
     public ITResult<Storage> AddArticleToStorage(string articleName, string articleDescription)
     {
         var result = StorageArticle.Create(Guid.NewGuid(), articleName, articleDescription);
