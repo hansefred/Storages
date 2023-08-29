@@ -23,7 +23,7 @@ public class StorageArticle : Entity
     /// Create a new Entity of Storage Article
     /// </summary>
     /// <param name="id">ID of new Entity</param>
-    /// <param name="articleName">Aricle Name of new Entity</param>
+    /// <param name="articleName">Article Name of new Entity</param>
     /// <param name="description">Description of new Entity</param>
     /// <returns>Returns a ITResult, contains error or new entity</returns>
     internal static ITResult<StorageArticle> Create (Guid id, string articleName, string description)

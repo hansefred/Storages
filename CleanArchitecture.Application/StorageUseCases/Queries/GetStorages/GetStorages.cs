@@ -7,17 +7,17 @@ namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStorages
     public record GetStoragesQuery : IRequest<IEnumerable<StorageDto>>;
     internal class GetStorages : IRequestHandler<GetStoragesQuery, IEnumerable<StorageDto>>
     {
-        public readonly IStorageRepository storageRepository;
+        private readonly IStorageRepository _storageRepository;
 
         public GetStorages(IStorageRepository storageRepository)
         {
-            this.storageRepository = storageRepository;
+            this._storageRepository = storageRepository;
         }
 
         public async Task<IEnumerable<StorageDto>> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
         {
             List<StorageDto> storageDtos = new List<StorageDto>();
-            foreach (var storage in await storageRepository.GetAll(cancellationToken))
+            foreach (var storage in await _storageRepository.GetAll(cancellationToken))
             {
                 storageDtos.Add(new StorageDto(storage));
             }

@@ -14,11 +14,11 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
     }
     internal class CreateStorage : IRequestHandler<CreateStorageCommand, IResult<StorageDto>>
     {
-        private readonly IUnitofWork unitofWork;
+        private readonly IUnitofWork _unitOfWork;
 
-        public CreateStorage(IUnitofWork unitofWork)
+        public CreateStorage(IUnitofWork unitOfWork)
         {
-            this.unitofWork = unitofWork;
+            this._unitOfWork = unitOfWork;
         }
 
         public async  Task<IResult<StorageDto>> Handle(CreateStorageCommand request, CancellationToken cancellationToken)
@@ -30,8 +30,8 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
                 var storage = result.Result!;
                 try
                 {
-                    await unitofWork.StorageRepository.Add(storage);
-                    unitofWork.Commit();
+                    await _unitOfWork.StorageRepository.Add(storage, cancellationToken);
+                    _unitOfWork.Commit();
                 }
                 catch (Exception ex)
                 {

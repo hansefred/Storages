@@ -5,7 +5,7 @@ using CleanArchitecture.Application.StorageUseCases.Queries.GetStorages;
 using CleanArchitecture.Domain.Repositories;
 using MediatR;
 
-namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStoragebyID
+namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStorageByID
 {
     public record GetStorageByIdQuery : IRequest<IResult<StorageDto>>
     {
@@ -14,17 +14,17 @@ namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStoragebyID
 
     internal class GetStorageById : IRequestHandler<GetStorageByIdQuery, IResult<StorageDto>>
     {
-        public readonly IStorageRepository storageRepository;
+        private readonly IStorageRepository _storageRepository;
 
         public GetStorageById(IStorageRepository storageRepository)
         {
-            this.storageRepository = storageRepository;
+            this._storageRepository = storageRepository;
         }
 
         public async Task<IEnumerable<StorageDto>> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
         {
             List<StorageDto> storageDtos = new List<StorageDto>();
-            foreach (var storage in await storageRepository.GetAll(cancellationToken))
+            foreach (var storage in await _storageRepository.GetAll(cancellationToken))
             {
                 storageDtos.Add(new StorageDto(storage));
             }
@@ -36,7 +36,7 @@ namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStoragebyID
         async Task<IResult<StorageDto>> IRequestHandler<GetStorageByIdQuery, IResult<StorageDto>>.Handle(GetStorageByIdQuery request, CancellationToken cancellationToken)
         {
 
-            var storage = await storageRepository.GetById(request.Id, cancellationToken);
+            var storage = await _storageRepository.GetById(request.Id, cancellationToken);
 
             if (storage is not null)
             {

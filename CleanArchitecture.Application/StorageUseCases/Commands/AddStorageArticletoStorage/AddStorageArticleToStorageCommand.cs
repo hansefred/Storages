@@ -4,21 +4,21 @@ using CleanArchitecture.Application.Exceptions;
 using CleanArchitecture.Domain.Repositories;
 using MediatR;
 
-namespace CleanArchitecture.Application.StorageUseCases.Commands.AddStorageArticletoStorage
+namespace CleanArchitecture.Application.StorageUseCases.Commands.AddStorageArticleToStorage
 {
-    public record AddStorageArticletoStorageCommand(Guid StorageID, string ArticleName, string ArticleDescription) : IRequest<IResult<StorageDto>>;
-    internal class AddStorageArticletoStorage : IRequestHandler<AddStorageArticletoStorageCommand, IResult<StorageDto>>
+    public record AddStorageArticleToStorageCommand(Guid StorageID, string ArticleName, string ArticleDescription) : IRequest<IResult<StorageDto>>;
+    internal class AddStorageArticleToStorage : IRequestHandler<AddStorageArticleToStorageCommand, IResult<StorageDto>>
     {
         private readonly IUnitofWork _unitofWork;
 
-        public AddStorageArticletoStorage(IUnitofWork unitofWork)
+        public AddStorageArticleToStorage(IUnitofWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitofWork = unitOfWork;
         }
 
-        public async Task<IResult<StorageDto>> Handle(AddStorageArticletoStorageCommand request, CancellationToken cancellationToken)
+        public async Task<IResult<StorageDto>> Handle(AddStorageArticleToStorageCommand request, CancellationToken cancellationToken)
         {
-            var storage = await _unitofWork.StorageRepository.GetById(request.StorageID);
+            var storage = await _unitofWork.StorageRepository.GetById(request.StorageID, cancellationToken);
             if (storage is not null)
             {
                 return TResult<StorageDto>.OnError(new StorageNotFoundException($"No Entity found with ID: {request.StorageID}"));
@@ -28,7 +28,7 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.AddStorageArtic
             {
                 storage!.AddArticleToStorage(request.ArticleName, request.ArticleDescription);
                 _unitofWork.Commit();
-                storage = await _unitofWork.StorageRepository.GetById(request.StorageID);
+                storage = await _unitofWork.StorageRepository.GetById(request.StorageID, cancellationToken);
                 return TResult<StorageDto>.OnSuccess(new StorageDto(storage!));
             }
             catch (Exception ex)

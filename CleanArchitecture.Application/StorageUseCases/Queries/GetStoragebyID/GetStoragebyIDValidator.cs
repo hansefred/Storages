@@ -1,10 +1,12 @@
-﻿using FluentValidation;
+﻿// Ignore Spelling: Validator
 
-namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStoragebyID
+using FluentValidation;
+
+namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStorageByID
 {
-    internal class GetStoragebyIDValidator : AbstractValidator<GetStorageByIdQuery>
+    internal class GetStorageByIDValidator : AbstractValidator<GetStorageByIdQuery>
     {
-        public GetStoragebyIDValidator()
+        public GetStorageByIDValidator()
         {
             RuleFor(o => o.Id).NotEmpty();
         }

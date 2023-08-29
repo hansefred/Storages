@@ -19,7 +19,19 @@
 
   
   <ItemGroup>
+    <Folder Include="ArticleUseCases\Commands\" />
+    <Folder Include="ArticleUseCases\Queries\" />
     <Folder Include="StorageUseCases\EventHandlers\" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\Mark\source\repos\Storages\CleanArchitecture.Application\.editorconfig" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Include="C:\Users\Mark\source\repos\Storages\CleanArchitecture.Application\.editorconfig" />
   </ItemGroup>
 
 </Project>

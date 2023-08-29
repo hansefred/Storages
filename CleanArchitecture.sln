@@ -17,7 +17,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ED03861B-9F2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3A970068-9B81-442F-B177-8BCA67F56617}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.Domain.Test", "CleanArchitecture.Domain.Test\CleanArchitecture.Domain.Test.csproj", "{4BBD037C-6349-453A-8026-5779F4A4516F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Domain.Test", "CleanArchitecture.Domain.Test\CleanArchitecture.Domain.Test.csproj", "{4BBD037C-6349-453A-8026-5779F4A4516F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{8BB3EB58-90B9-4BCE-8709-CC39EA2BAD0C}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
