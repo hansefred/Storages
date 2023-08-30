@@ -9,6 +9,7 @@ namespace CleanArchitecture.Infastructure.Repositories
         private IDbTransaction _transaction;
 
         private IStorageRepository? _storageRepository;
+        private IStorageArticleRepository _articleRepository;
 
         public UnitOfWork(IDbConnection dbConnection)
         {
@@ -19,7 +20,7 @@ namespace CleanArchitecture.Infastructure.Repositories
 
         public IStorageRepository StorageRepository { get { return _storageRepository ?? (_storageRepository = new StorageRepository(_transaction)); } }
 
-
+        public IStorageArticleRepository ArticleRepository { get { return _articleRepository ?? (_articleRepository = new StorageArticleRepository(_transaction)); } }
 
         public void Commit()
         {

@@ -1,6 +1,5 @@
-﻿using CleanArchitecture.Domain;
+﻿using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
-using Dapper;
 using System.Data;
 
 namespace CleanArchitecture.Infastructure.Repositories
@@ -11,12 +10,12 @@ namespace CleanArchitecture.Infastructure.Repositories
 
         public StorageRepository(IDbTransaction dbTransaction) : base(dbTransaction)
         {
-            
+
         }
 
         public Task Add(Storage entity, CancellationToken cancellationToken = default)
         {
-            Connection.ExecuteScalarAsync("", transaction: Transaction);
+            throw new NotImplementedException();
         }
 
         public Task Delete(Storage entity, CancellationToken cancellationToken = default)
