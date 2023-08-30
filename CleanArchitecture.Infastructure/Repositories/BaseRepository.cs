@@ -4,8 +4,8 @@ namespace CleanArchitecture.Infastructure.Repositories
 {
     internal class BaseRepository
     {
-        protected IDbTransaction Transaction { get; private set; }
-        protected IDbConnection Connection { 
+        internal IDbTransaction Transaction { get; set; }
+        internal IDbConnection Connection { 
             get
             {
                 if (Transaction.Connection is null)

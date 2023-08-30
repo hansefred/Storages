@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Domain.Entities;
 
-public class StorageArticle : AggregateRoot
+public class StorageArticle : Entity
 {
     internal StorageArticle(Guid id, string articleName, string description) : this (id,null,articleName,description)
     {

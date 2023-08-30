@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "StorageDatabase", "StorageDatabase\StorageDatabase.sqlproj", "{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,12 @@ Global
 		{4BBD037C-6349-453A-8026-5779F4A4516F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BBD037C-6349-453A-8026-5779F4A4516F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BBD037C-6349-453A-8026-5779F4A4516F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +73,7 @@ Global
 		{68E97C8D-0C7F-484B-82F5-D3811A31CE5B} = {ED03861B-9F21-4144-8906-E504409A96E5}
 		{4F601400-7E28-44D7-B96D-73E617E43570} = {ED03861B-9F21-4144-8906-E504409A96E5}
 		{4BBD037C-6349-453A-8026-5779F4A4516F} = {3A970068-9B81-442F-B177-8BCA67F56617}
+		{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D} = {ED03861B-9F21-4144-8906-E504409A96E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {597D398F-F939-458C-8578-89BC4FF52831}

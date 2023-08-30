@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using CleanArchitecture.Domain.Repositories;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Application;
@@ -13,6 +14,7 @@ public static class DependencyInjection
             configure.RegisterServicesFromAssemblies(assembly);
         });
         services.AddValidatorsFromAssembly(assembly);
+
 
         return services;
     }

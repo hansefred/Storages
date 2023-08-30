@@ -27,6 +27,7 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.UpdateStorageNa
             var result = storage.UpdateStorageName(request.StorageName);
             if (result.IsSuccess) 
             {
+                await _unitofWork.StorageRepository.Update(result.Result!, cancellationToken);
                 _unitofWork.Commit();
                 return TResult<StorageDto>.OnSuccess(new StorageDto(result.Result!));
             }

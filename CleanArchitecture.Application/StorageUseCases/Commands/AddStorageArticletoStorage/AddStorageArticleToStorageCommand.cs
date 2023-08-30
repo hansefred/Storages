@@ -23,9 +23,14 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.AddStorageArtic
 
             try
             {
-                storage!.AddArticleToStorage(request.ArticleName, request.ArticleDescription);
+                var result = storage!.AddArticleToStorage(request.ArticleName, request.ArticleDescription);
+                if (!result.IsSuccess)
+                {
+                    return TResult<StorageDto>.OnError(new StorageApplicationErrorException(result.DomainException!.ToString() ?? ""));
+                }
+                await _unitofWork.StorageRepository.Update(result.Result!);
                 _unitofWork.Commit();
-                storage = await _unitofWork.StorageRepository.GetById(request.StorageID, cancellationToken);
+
                 return TResult<StorageDto>.OnSuccess(new StorageDto(storage!));
             }
             catch (Exception ex)

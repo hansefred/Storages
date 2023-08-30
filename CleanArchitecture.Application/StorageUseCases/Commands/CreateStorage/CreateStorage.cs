@@ -27,8 +27,8 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
                 var storage = result.Result!;
                 try
                 {
-                    await _unitOfWork.StorageRepository.Add(storage, cancellationToken);
-                    _unitOfWork.Commit();
+                    await _unitofWork.StorageRepository.Add(storage, cancellationToken);
+                    _unitofWork.Commit();
                 }
                 catch (Exception ex)
                 {

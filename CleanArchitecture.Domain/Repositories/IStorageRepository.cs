@@ -6,6 +6,7 @@ namespace CleanArchitecture.Domain.Repositories
     {
         Task<Storage?> GetById(Guid id, CancellationToken cancellationToken = default);
         Task<List<Storage>> GetAll( CancellationToken cancellationToken = default);
+        Task Update (Storage storage, CancellationToken cancellationToken = default);
         Task Add (Storage entity, CancellationToken cancellationToken = default);
         Task Delete (Storage entity, CancellationToken cancellationToken = default);
     }
