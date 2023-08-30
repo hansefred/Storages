@@ -11,13 +11,10 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.UpdateStorageNa
         public Guid StorageID { get; set; }
         public string StorageName { get; set; } = string.Empty;
     }
-    public class UpdateStorageName : IRequestHandler<UpdateStorageNameCommand, IResult<StorageDto>>
+    public class UpdateStorageName : RequestCommandHandlerBase, IRequestHandler<UpdateStorageNameCommand, IResult<StorageDto>>
     {
-        private readonly IUnitofWork _unitofWork;
-
-        public UpdateStorageName(IUnitofWork unitOfWork)
+        public UpdateStorageName(IUnitofWork unitofWork) : base(unitofWork)
         {
-            _unitofWork = unitOfWork;
         }
 
         async Task<IResult<StorageDto>> IRequestHandler<UpdateStorageNameCommand, IResult<StorageDto>>.Handle(UpdateStorageNameCommand request, CancellationToken cancellationToken)

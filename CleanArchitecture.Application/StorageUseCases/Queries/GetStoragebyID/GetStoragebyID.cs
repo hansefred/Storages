@@ -12,13 +12,10 @@ namespace CleanArchitecture.Application.StorageUseCases.Queries.GetStorageByID
         public Guid Id { get; set; }
     }
 
-    internal class GetStorageById : IRequestHandler<GetStorageByIdQuery, IResult<StorageDto>>
+    internal class GetStorageById : RequestQueryHandlerBase, IRequestHandler<GetStorageByIdQuery, IResult<StorageDto>>
     {
-        private readonly IStorageRepository _storageRepository;
-
-        public GetStorageById(IStorageRepository storageRepository)
+        public GetStorageById(IStorageRepository storageRepository) : base(storageRepository)
         {
-            this._storageRepository = storageRepository;
         }
 
         public async Task<IEnumerable<StorageDto>> Handle(GetStoragesQuery request, CancellationToken cancellationToken)

@@ -12,13 +12,10 @@ namespace CleanArchitecture.Application.StorageUseCases.Commands.CreateStorage
         public string? Name { get; set; }
         public string? Description { get; set; }
     }
-    internal class CreateStorage : IRequestHandler<CreateStorageCommand, IResult<StorageDto>>
+    internal class CreateStorage : RequestCommandHandlerBase, IRequestHandler<CreateStorageCommand, IResult<StorageDto>>
     {
-        private readonly IUnitofWork _unitOfWork;
-
-        public CreateStorage(IUnitofWork unitOfWork)
+        public CreateStorage(IUnitofWork unitofWork) : base(unitofWork)
         {
-            this._unitOfWork = unitOfWork;
         }
 
         public async  Task<IResult<StorageDto>> Handle(CreateStorageCommand request, CancellationToken cancellationToken)

@@ -7,13 +7,10 @@ using MediatR;
 namespace CleanArchitecture.Application.StorageUseCases.Commands.AddStorageArticleToStorage
 {
     public record AddStorageArticleToStorageCommand(Guid StorageID, string ArticleName, string ArticleDescription) : IRequest<IResult<StorageDto>>;
-    internal class AddStorageArticleToStorage : IRequestHandler<AddStorageArticleToStorageCommand, IResult<StorageDto>>
+    internal class AddStorageArticleToStorage : RequestCommandHandlerBase, IRequestHandler<AddStorageArticleToStorageCommand, IResult<StorageDto>>
     {
-        private readonly IUnitofWork _unitofWork;
-
-        public AddStorageArticleToStorage(IUnitofWork unitOfWork)
+        public AddStorageArticleToStorage(IUnitofWork unitofWork) : base(unitofWork)
         {
-            _unitofWork = unitOfWork;
         }
 
         public async Task<IResult<StorageDto>> Handle(AddStorageArticleToStorageCommand request, CancellationToken cancellationToken)
