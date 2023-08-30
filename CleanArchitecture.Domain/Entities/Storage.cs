@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Domain.Primitives;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace CleanArchitecture.Domain.Entities;
