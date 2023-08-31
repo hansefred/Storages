@@ -20,7 +20,7 @@ namespace CleanArchitecture.Application.ArticleUseCases.Commands.UpdateArticleDe
 
         async Task<IResult<StorageArticleDTO>> IRequestHandler<UpdateArticleDescriptionCommand, IResult<StorageArticleDTO>>.Handle(UpdateArticleDescriptionCommand request, CancellationToken cancellationToken)
         {
-            var article = await _unitofWork.ArticleRepository.GetById(request.ArticleID);
+            var article = await _unitofWork.ArticleRepository.GetById(request.ArticleID, cancellationToken);
             if (article is null)
             {
                 return TResult<StorageArticleDTO>.OnError(new StorageArticleNotFoundException($"Storage Article with ID: {request.ArticleID} not found"));

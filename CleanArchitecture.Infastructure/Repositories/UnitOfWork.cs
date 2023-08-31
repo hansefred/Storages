@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Domain.Repositories;
+using CleanArchitecture.Infastructure.Common;
 using System.Data;
 
 namespace CleanArchitecture.Infastructure.Repositories
@@ -11,14 +12,14 @@ namespace CleanArchitecture.Infastructure.Repositories
         private IStorageRepository? _storageRepository;
         private IStorageArticleRepository _articleRepository;
 
-        public UnitOfWork(IDbConnection dbConnection)
+        public UnitOfWork(IDBConnectionFactory dBConnectionFactory)
         {
-            _dbConnection = dbConnection;
+            _dbConnection = dBConnectionFactory.GetDBConnection();
             _dbConnection.Open();
             _transaction = _dbConnection.BeginTransaction();
         }
 
-        public IStorageRepository StorageRepository { get { return _storageRepository ?? (_storageRepository = new StorageRepository(_transaction)); } }
+        public IStorageRepository StorageRepository { get { return _storageRepository ?? (_storageRepository = new StorageRepository(_transaction, new StorageArticleRepository(_transaction))); } }
 
         public IStorageArticleRepository ArticleRepository { get { return _articleRepository ?? (_articleRepository = new StorageArticleRepository(_transaction)); } }
 

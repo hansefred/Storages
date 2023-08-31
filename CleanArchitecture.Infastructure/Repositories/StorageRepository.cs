@@ -8,9 +8,9 @@ namespace CleanArchitecture.Infastructure.Repositories
 {
     internal class StorageRepository : BaseRepository, IStorageRepository
     {
-        private readonly IStorageArticleRepository _storageArticleRepository;
+        private readonly StorageArticleRepository _storageArticleRepository;
 
-        public StorageRepository(IDbTransaction dbTransaction, IStorageArticleRepository storageArticleRepository) : base(dbTransaction)
+        public StorageRepository(IDbTransaction dbTransaction, StorageArticleRepository storageArticleRepository) : base(dbTransaction)
         {
             _storageArticleRepository = storageArticleRepository;
         }
@@ -52,7 +52,7 @@ namespace CleanArchitecture.Infastructure.Repositories
             {
                 foreach (var article in storage.StorageArticles) 
                 {
-                    var articleresult = _storageArticleRepository.GetById(article.Id);
+                    var articleresult = _storageArticleRepository.GetById(article.Id, cancellationToken);
                     if (articleresult is not null)
                     {
                         await _storageArticleRepository.Update(article, cancellationToken);

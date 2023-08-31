@@ -20,7 +20,7 @@ namespace CleanArchitecture.Application.ArticleUseCases.Commands.UpdateArticleNa
 
         async Task<IResult<StorageArticleDTO>> IRequestHandler<UpdateArticleNameCommand, IResult<StorageArticleDTO>>.Handle(UpdateArticleNameCommand request, CancellationToken cancellationToken)
         {
-            var article = await _unitofWork.ArticleRepository.GetById(request.ArticleID);
+            var article = await _unitofWork.ArticleRepository.GetById(request.ArticleID, cancellationToken);
             if (article is null)
             {
                 return TResult<StorageArticleDTO>.OnError(new StorageArticleNotFoundException($"Storage Article with ID: {request.ArticleID} not found"));
@@ -32,7 +32,7 @@ namespace CleanArchitecture.Application.ArticleUseCases.Commands.UpdateArticleNa
             {
                 return TResult<StorageArticleDTO>.OnSuccess(new StorageArticleDTO(result!.Result!));
             }
-            return TResult<StorageArticleDTO>.OnError(new StorageArticleApplicationException(result!.DomainException!.ToString() ?? "");
+            return TResult<StorageArticleDTO>.OnError(new StorageArticleApplicationException(result!.DomainException!.ToString() ?? ""));
         }
     }
 }
