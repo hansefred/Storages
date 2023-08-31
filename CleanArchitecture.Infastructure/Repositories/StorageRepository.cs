@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
+using CleanArchitecture.Infastructure.Exeptions;
 using Dapper;
 using System.Data;
 
@@ -7,11 +8,11 @@ namespace CleanArchitecture.Infastructure.Repositories
 {
     internal class StorageRepository : BaseRepository, IStorageRepository
     {
+        private readonly IStorageArticleRepository _storageArticleRepository;
 
-
-        public StorageRepository(IDbTransaction dbTransaction) : base(dbTransaction)
+        public StorageRepository(IDbTransaction dbTransaction, IStorageArticleRepository storageArticleRepository) : base(dbTransaction)
         {
-
+            _storageArticleRepository = storageArticleRepository;
         }
 
         public async  Task Add(Storage entity, CancellationToken cancellationToken = default)
@@ -47,15 +48,27 @@ namespace CleanArchitecture.Infastructure.Repositories
 
         public async Task Update(Storage storage, CancellationToken cancellationToken = default)
         {
-            await Connection.ExecuteAsync("Update [dbo].[Storage] Set Name = @Name,Description = @Description Where Id = @Id",
-                                        new { Name = storage.Name, Description = storage.Description, Id = storage.Id });
-
             if (storage.StorageArticles.Any()) 
             {
                 foreach (var article in storage.StorageArticles) 
                 {
+                    var articleresult = _storageArticleRepository.GetById(article.Id);
+                    if (articleresult is not null)
+                    {
+                        await _storageArticleRepository.Update(article, cancellationToken);
+                        continue;
+                    }
+                    await _storageArticleRepository.Add(article, cancellationToken);
 
                 }
+            }
+
+            var result = await Connection.ExecuteAsync("Update [dbo].[Storage] Set Name = @Name,Description = @Description Where Id = @Id",
+                            new { Name = storage.Name, Description = storage.Description, Id = storage.Id });
+
+            if (result < 1)
+            {
+                throw new StorageUpdateFailedInfastructureException($"Storage with ID: {storage.Id} not found");
             }
         }
     }
