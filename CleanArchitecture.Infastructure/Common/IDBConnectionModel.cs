@@ -3,5 +3,7 @@
     public interface IDBConnectionModel
     {
         string GetConnectionString();
+        string GetPassword();
+        string GetDBName();
     }
 }

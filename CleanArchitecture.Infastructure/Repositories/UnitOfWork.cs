@@ -10,7 +10,7 @@ namespace CleanArchitecture.Infastructure.Repositories
         private IDbTransaction _transaction;
 
         private IStorageRepository? _storageRepository;
-        private IStorageArticleRepository _articleRepository;
+        private IStorageArticleRepository? _articleRepository;
 
         public UnitOfWork(IDBConnectionFactory dBConnectionFactory)
         {
@@ -47,7 +47,7 @@ namespace CleanArchitecture.Infastructure.Repositories
         private void resetRepositories()
         {
             _storageRepository = null;
-
+            _articleRepository = null;
         }
 
         public void Dispose()
