@@ -156,6 +156,33 @@ namespace CleanArchitecture.Infastructure.Test
 
         }
 
+        [Theory]
+        [InlineData("FirstName", "FirstDescription", "ArticleName", "ArticleDescription")]
+        public async Task Create_With_Articles_ValidValues_ReturnsNothing(string name, string description, string articleName, string articleDescription)
+        {
+            //Arrange
+            IUnitofWork _unitOfWork = new UnitOfWork(new DBConnectionFactory(_dbConnectionModel));
+            var result = Storage.Create(Guid.NewGuid(), name, description);
+            var storage = result.Result;
+            storage!.AddArticleToStorage(Guid.NewGuid(),articleName, articleDescription);
+
+
+            //Act
+            await _unitOfWork.StorageRepository.Add(storage!);
+            _unitOfWork.Commit();
+            var storages = await _unitOfWork.StorageRepository.GetAll();
+
+
+            //Assert
+            Assert.Single(storages);
+            Assert.Equal(name, storages[0].Name);
+            Assert.Equal(description, storages[0].Description);
+            Assert.Single(storages[0].StorageArticles);
+            Assert.Equal(articleName, storages[0].StorageArticles[0].ArticleName);
+            Assert.Equal(articleDescription, storages[0].StorageArticles[0].Description);
+
+        }
+
     }
 
 

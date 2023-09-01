@@ -4,11 +4,17 @@ namespace CleanArchitecture.Domain.Entities;
 
 public class StorageArticle : Entity
 {
-    internal StorageArticle(Guid id, string articleName, string description) : this (id,null,articleName,description)
+    private StorageArticle(): base(Guid.NewGuid())
     {
+        ArticleName = "";
+        Description = "";
+    }
+    private StorageArticle(Guid id, string articleName, string description) : this (id,null,articleName,description)
+    {
+
     }
 
-    internal StorageArticle(Guid id, Storage? storage, string articleName, string description) : base(id)
+    private StorageArticle(Guid id, Storage? storage, string articleName, string description) : base(id)
     {
         ArticleName = articleName;
         Description = description;

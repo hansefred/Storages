@@ -23,13 +23,13 @@ namespace CleanArchitecture.Infastructure.Repositories
         /// <returns></returns>
         public async  Task Add(Storage entity, CancellationToken cancellationToken = default)
         {
+            await Connection.ExecuteAsync("INSERT INTO [dbo].[Storage] (Id,Name, Description)VALUES (@Id, @Name, @Description)",
+                                    new { Id = entity.Id, Name = entity.Name, Description = entity.Description }, transaction: Transaction);
+
             foreach (var obj in entity.StorageArticles)
             {
                 await _storageArticleRepository.Add(obj);
             }
-
-            await Connection.ExecuteAsync("INSERT INTO [dbo].[Storage] (Id,Name, Description)VALUES (@Id, @Name, @Description)",
-                                    new { Id = entity.Id, Name = entity.Name, Description = entity.Description }, transaction: Transaction);
 
 
         }
@@ -61,8 +61,28 @@ namespace CleanArchitecture.Infastructure.Repositories
         /// <returns></returns>
         public async Task<List<Storage>> GetAll(CancellationToken cancellationToken = default)
         {
-            // TODO: Return related Storage Article 
-            var result = await Connection.QueryAsync<Storage>("Select Id, Name, Description FROM [dbo].[Storage]", transaction: Transaction);
+
+            var storageDictionary = new Dictionary<Guid, Storage>();
+            var result = await Connection.QueryAsync<Storage, StorageArticle, Storage>("SELECT Storage.Id, Storage.Name, Storage.Description, StorageArticle.Id AS Split,StorageArticle.Name AS ArticleName,StorageArticle.Description FROM [TestDB].[dbo].[Storage] AS Storage INNER JOIN [TestDB].[dbo].[StorageArticle] AS StorageArticle ON Storage.Id = StorageArticle.Storage_Id",
+                                                               (s, a) =>
+                                                               {
+                                                                   Storage? storageQuery;
+                                                                   if (!storageDictionary.TryGetValue(s.Id, out storageQuery))
+                                                                   {
+                                                                       storageQuery = s;
+                                                                       storageDictionary.Add(storageQuery.Id, storageQuery);
+
+                                                                   }
+                                                                   if (a is not null)
+                                                                   {
+                                                                       storageQuery.AddArticleToStorage(a.Id, a.ArticleName, a.Description);
+                                                                   }
+
+
+                                                                   return storageQuery;
+                                                               }, splitOn: "Split", transaction: Transaction);
+
+
             if (result is null) 
             {
                 return new();
@@ -78,9 +98,27 @@ namespace CleanArchitecture.Infastructure.Repositories
         /// <returns>Object or null</returns>
         public async Task<Storage?> GetById(Guid id, CancellationToken cancellationToken = default)
         {
-            // TODO: Return related Storage Article 
-            var result = await Connection.QueryAsync<Storage>("Select Id, Name, Description FROM [dbo].[Storage] Where Id = @Id",
-                                                                new {Id = id},transaction: Transaction);
+
+            var storageDictionary = new Dictionary<Guid, Storage>();
+            var result = await Connection.QueryAsync<Storage, StorageArticle, Storage>("SELECT Storage.Id, Storage.Name, Storage.Description, StorageArticle.Id AS Split,StorageArticle.Name AS ArticleName,StorageArticle.Description FROM [TestDB].[dbo].[Storage] AS Storage INNER JOIN [TestDB].[dbo].[StorageArticle] AS StorageArticle ON Storage.Id = StorageArticle.Storage_Id Where Storage.Id = @Id",
+                                                              (s, a) =>
+                                                              {
+                                                                  Storage? storageQuery;
+                                                                  if (!storageDictionary.TryGetValue(s.Id, out storageQuery))
+                                                                  {
+                                                                      storageQuery = s;
+                                                                      storageDictionary.Add(storageQuery.Id, storageQuery);
+
+                                                                  }
+                                                                  if (a is not null)
+                                                                  {
+                                                                      storageQuery.AddArticleToStorage(a.Id, a.ArticleName, a.Description);
+                                                                  }
+
+
+                                                                  return storageQuery;
+                                                              }, splitOn: "Split", param: new { Id = id }, transaction: Transaction);
+            
 
             return result.FirstOrDefault();
         }

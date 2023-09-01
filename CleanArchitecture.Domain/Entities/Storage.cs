@@ -6,7 +6,6 @@ namespace CleanArchitecture.Domain.Entities;
 
 public class Storage : AggregateRoot
 {
-
     private Storage(Guid id, string name, string description) : base(id)
     {
         Name = name;
@@ -77,9 +76,9 @@ public class Storage : AggregateRoot
     /// <param name="articleName">Name of the New Article, must be between 5 and 49 chars/param>
     /// <param name="articleDescription">New Value for Description could not be bigger than 149 chars</param>
     /// <returns>Returns a <see cref="ITResult{Entity}"/> from Type <see cref="Storage"/>, contains error or entity, check Success Property</returns>
-    public ITResult<Storage> AddArticleToStorage(string articleName, string articleDescription)
+    public ITResult<Storage> AddArticleToStorage(Guid id, string articleName, string articleDescription)
     {
-        var result = StorageArticle.Create(Guid.NewGuid(), articleName, articleDescription);
+        var result = StorageArticle.Create(id, articleName, articleDescription);
         if (result.IsSuccess)
         {
             var article = result.Result!;

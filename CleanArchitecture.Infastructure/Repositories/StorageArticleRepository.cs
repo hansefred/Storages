@@ -2,6 +2,7 @@
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Infastructure.Exeptions;
 using Dapper;
+using Microsoft.Identity.Client.Extensions.Msal;
 using System.Data;
 
 namespace CleanArchitecture.Infastructure.Repositories
@@ -20,8 +21,8 @@ namespace CleanArchitecture.Infastructure.Repositories
         /// <returns></returns>
         internal async Task Add(StorageArticle storageArticle, CancellationToken cancellationToken = default)
         {
-            await Connection.ExecuteAsync("INSERT INTO [dbo].[StorageArticle] (Id,Name, Description)VALUES (NEWID(), @Name, @Description)",
-                             new { Name = storageArticle.ArticleName, Description = storageArticle.Description }, transaction: Transaction);
+            await Connection.ExecuteAsync("INSERT INTO [dbo].[StorageArticle] (Id,Name, Description,Storage_Id)VALUES (@Id, @Name, @Description,@StorageId)",
+                             new { Id = storageArticle.Id,Name = storageArticle.ArticleName, Description = storageArticle.Description , StorageId  = storageArticle!.Storage!.Id}, transaction: Transaction);
 
         }
 
@@ -34,8 +35,8 @@ namespace CleanArchitecture.Infastructure.Repositories
         /// <exception cref="StorageArticleUpdateFailedInfastructureException"></exception>
         public async Task Update(StorageArticle storageArticle, CancellationToken cancellationToken = default)
         {
-            var result = await Connection.ExecuteAsync("Update [dbo].[StorageArticle] Set Name = @Name, Description = @Description Where Id = @Id",
-                                    new { Name = storageArticle.ArticleName, Description = storageArticle.Description, Id = storageArticle.Id }, transaction: Transaction);
+            var result = await Connection.ExecuteAsync("Update [dbo].[StorageArticle] Set Name = @Name, Description = @Description, Storage_Id = @StorageId Where Id = @Id",
+                                    new { Name = storageArticle.ArticleName, Description = storageArticle.Description, Id = storageArticle.Id, StorageId = storageArticle!.Storage!.Id }, transaction: Transaction);
 
             if (result < 1)
             {
