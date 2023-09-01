@@ -15,39 +15,103 @@ namespace CleanArchitecture.Infastructure.Repositories
             _storageArticleRepository = storageArticleRepository;
         }
 
+        /// <summary>
+        /// Add a New Storage Entity and all related Storage Article to the Transaction, please call Commit after to persist
+        /// </summary>
+        /// <param name="entity">The new Entity</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async  Task Add(Storage entity, CancellationToken cancellationToken = default)
         {
-            await Connection.ExecuteAsync("INSERT INTO [dbo].[Storage] (Id,Name, Description)VALUES (NEWID(), @Name, @Description)",
-                                    new { Name = entity.Name, Description = entity.Description }, transaction: Transaction);
+            foreach (var obj in entity.StorageArticles)
+            {
+                await _storageArticleRepository.Add(obj);
+            }
+
+            await Connection.ExecuteAsync("INSERT INTO [dbo].[Storage] (Id,Name, Description)VALUES (@Id, @Name, @Description)",
+                                    new { Id = entity.Id, Name = entity.Name, Description = entity.Description }, transaction: Transaction);
+
+
         }
 
+        /// <summary>
+        /// Delete Storage with all related Articles, please call Commit after to persist
+        /// </summary>
+        /// <param name="id">The ID of the Storage</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task Delete(Storage entity, CancellationToken cancellationToken = default)
         {
-            await Connection.ExecuteAsync("DELETE [dbo].[Storage] Where Id = @Id", new {Id = entity.Id},
-                                            transaction: Transaction);
+            var storage = await GetById(entity.Id);
+            if (storage is not null)
+            {
+                foreach (var article in storage.StorageArticles)
+                {
+                    await _storageArticleRepository.Remove(article.Id);
+                }
+                await Connection.ExecuteAsync("DELETE [dbo].[Storage] Where Id = @Id", new { Id = entity.Id },
+                                transaction: Transaction);
+            }
         }
 
+        /// <summary>
+        /// Returns a List of all Storage Object with related Storage Article
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<List<Storage>> GetAll(CancellationToken cancellationToken = default)
         {
-            var result = await Connection.QueryAsync<Storage>("Select Id, Name, Description FROM [dbo].[Storage]");
+            // TODO: Return related Storage Article 
+            var result = await Connection.QueryAsync<Storage>("Select Id, Name, Description FROM [dbo].[Storage]", transaction: Transaction);
             if (result is null) 
             {
                 return new();
             }
-
             return result.ToList();
         }
 
+        /// <summary>
+        /// Returns a Storage Object with the specified ID
+        /// </summary>
+        /// <param name="id">ID of Storage Object</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Object or null</returns>
         public async Task<Storage?> GetById(Guid id, CancellationToken cancellationToken = default)
         {
+            // TODO: Return related Storage Article 
             var result = await Connection.QueryAsync<Storage>("Select Id, Name, Description FROM [dbo].[Storage] Where Id = @Id",
-                                                                new {Id = id});
+                                                                new {Id = id},transaction: Transaction);
 
             return result.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Update Storage and all Storage Article, please call Commit after to persist
+        /// </summary>
+        /// <param name="storage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="StorageNotFoundInfastructureException">No Article found</exception>
+        /// <exception cref="StorageUpdateFailedInfastructureException"></exception>
         public async Task Update(Storage storage, CancellationToken cancellationToken = default)
         {
+            var storageObject = await GetById(storage.Id);
+            if (storageObject is null)
+            {
+                throw new StorageNotFoundInfastructureException($"No Storage Object found with ID: {storage.Id}");
+            }
+
+            //Delete Articles 
+            foreach ( var obj in storageObject.StorageArticles)
+            {
+                var exists = storage.StorageArticles.FirstOrDefault(o => o.Id == obj.Id);
+                if (exists is null)
+                {
+                    await _storageArticleRepository.Remove(obj.Id);
+                }
+            }
+
+            //Add new Articles 
             if (storage.StorageArticles.Any()) 
             {
                 foreach (var article in storage.StorageArticles) 
@@ -63,13 +127,12 @@ namespace CleanArchitecture.Infastructure.Repositories
                 }
             }
 
-            var result = await Connection.ExecuteAsync("Update [dbo].[Storage] Set Name = @Name,Description = @Description Where Id = @Id",
-                            new { Name = storage.Name, Description = storage.Description, Id = storage.Id });
 
-            if (result < 1)
-            {
-                throw new StorageUpdateFailedInfastructureException($"Storage with ID: {storage.Id} not found");
-            }
+
+            var result = await Connection.ExecuteAsync("Update [dbo].[Storage] Set Name = @Name,Description = @Description Where Id = @Id",
+                            new { Name = storage.Name, Description = storage.Description, Id = storage.Id }, transaction: Transaction);
+
+
         }
     }
 }

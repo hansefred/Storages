@@ -100,7 +100,7 @@ public class Storage : AggregateRoot
     /// <returns>A <see cref="ITResult{Entity}"/> from type <see cref="Storage"/> Property Success need to be checked </returns>
     public ITResult<Storage> UpdateStorageDescription (string  description) 
     {
-        if (ValidateDescription(description, out ITResult<Storage>? OnError))
+        if (!ValidateDescription(description, out ITResult<Storage>? OnError))
         {
             return OnError!;
         }
@@ -115,7 +115,7 @@ public class Storage : AggregateRoot
     /// <returns>A <see cref="ITResult{Entity}"/> from type <see cref="Storage"/> Property Success need to be checked </returns>
     public ITResult<Storage> UpdateStorageName(string name)
     {
-        if (ValidateName(name, out ITResult<Storage>? OnError))
+        if (!ValidateName(name, out ITResult<Storage>? OnError))
         {
             return OnError!;
         }

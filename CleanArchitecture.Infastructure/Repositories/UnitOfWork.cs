@@ -23,6 +23,9 @@ namespace CleanArchitecture.Infastructure.Repositories
 
         public IStorageArticleRepository ArticleRepository { get { return _articleRepository ?? (_articleRepository = new StorageArticleRepository(_transaction)); } }
 
+        /// <summary>
+        /// Comit changes for underlying Repositories
+        /// </summary>
         public void Commit()
         {
             try

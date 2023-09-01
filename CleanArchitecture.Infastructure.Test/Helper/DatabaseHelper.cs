@@ -8,24 +8,21 @@ namespace CleanArchitecture.Infastructure.Test.Helper
 {
     public static class DatabaseHelper
     {
-        public static void DeployDatabase(IDBConnectionModel dBConfig, string DacFile)
+        public static void DeployDatabase(IDBConnectionModel dBConfig, string DacFile, ILogger logger)
         {
-            try
-            {
+            logger.Information("Connect to Database with Connection String: {ConnectionString}", dBConfig.GetConnectionString());
                 var instance = new DacServices(dBConfig.GetConnectionString());
 
-
+            logger.Information("Loading DAC File");
                 using (var dacpac = DacPackage.Load(DacFile))
                 {
-                    instance.Deploy(dacpac, dBConfig.GetDBName());
+                logger.Information("Deploy DAC File");
+                instance.Deploy(dacpac, dBConfig.GetDBName());
                 }
 
 
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error("Cannot deploy SQL Database to {DBName}: {ex}", dBConfig.GetDBName, ex);
-            }
+            
+
         }
         public static void WaitforSQLDB(string ConnectingString, ILogger logger, int Port = 1433, int Retry = 100)
         {

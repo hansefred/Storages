@@ -1,15 +1,12 @@
-﻿using Serilog.Extensions.Logging;
-using Serilog;
+﻿using Serilog;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 using DotNet.Testcontainers.Containers;
-using Microsoft.Extensions.Logging;
 using CleanArchitecture.Infastructure.Test.Helper;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Infastructure.Common;
 using CleanArchitecture.Infastructure.Repositories;
-using System.Formats.Tar;
 
 namespace CleanArchitecture.Infastructure.Test
 {
@@ -51,6 +48,8 @@ namespace CleanArchitecture.Infastructure.Test
             if (_dockerContainer is not null)
             {
                 await _dockerContainer.StopAsync();
+
+
             }
         }
 
@@ -58,7 +57,7 @@ namespace CleanArchitecture.Infastructure.Test
         {
             _dockerContainer = await DockerHelper.CreateDockerDatabase(_dbConnectionModel);
             DatabaseHelper.WaitforSQLDB(_dbConnectionModel.GetConnectionString(), Log.Logger);
-            DatabaseHelper.DeployDatabase(_dbConnectionModel, _dacpacFile);
+            DatabaseHelper.DeployDatabase(_dbConnectionModel, _dacpacFile, Log.Logger);
 
         }
 
@@ -83,89 +82,80 @@ namespace CleanArchitecture.Infastructure.Test
             //Assert
             var storages = await _unitOfWork.StorageRepository.GetAll();
             Assert.Single(storages);
+            Assert.Equal(name, storages[0].Name);
+            Assert.Equal(description, storages[0].Description);
 
 
         }
 
 
-        //[Fact]
-        //public async Task ArticleRepository_GetAll_Returns_EmptyList()
-        //{
-        //    //Arrange
-        //    IStorageRepository _refStorageRepository = new StorageRepository(_dbConfig.DBConnectionString, new SerilogLoggerFactory(Log.Logger).CreateLogger<StorageRepository>());
+        [Fact]
+        public async Task GetAll_Returns_EmptyList()
+        {
+            //Arrange
+            IUnitofWork _unitOfWork = new UnitOfWork(new DBConnectionFactory(_dbConnectionModel));
 
-        //    //Act
-        //    var queryStorages = await _refStorageRepository.GetAll();
+            //Act
+            var queryStorages = await _unitOfWork.StorageRepository.GetAll();
 
-        //    //Assert 
-        //    Assert.Empty(queryStorages);
+            //Assert 
+            Assert.Empty(queryStorages);
 
-        //}
-
-
-        //[Theory]
-        //[InlineData("FirstName", "ChangedName")]
-        //public async Task ArticleRepository_Create_Update_Returns_ChangedArticle(string FirstStorageName, string ChangedStorageName)
-        //{
-        //    //Arrange
-        //    IStorageRepository _refStorageRepository = new StorageRepository(_dbConfig.DBConnectionString, new SerilogLoggerFactory(Log.Logger).CreateLogger<StorageRepository>());
-        //    Storage _dummyStorage = new Storage() { StorageName = FirstStorageName };
+        }
 
 
-        //    //Act
-        //    var storage = await _refStorageRepository.CreateStorage(_dummyStorage);
-        //    storage.StorageName = ChangedStorageName;
-
-        //    await _refStorageRepository.UpdateStorage(storage);
-        //    var queryStorage = await _refStorageRepository.GetStoragebyID(storage.ID);
-
-
-        //    //Assert
-        //    Assert.NotNull(queryStorage);
-        //    Assert.Equal(queryStorage.StorageName, ChangedStorageName);
+        [Theory]
+        [InlineData("FirstName", "ChangedName")]
+        public async Task Create_Update_ValidData_Returns_ChangedArticle(string FirstStorageName, string ChangedStorageName)
+        {
+            //Arrange
+            IUnitofWork _unitOfWork = new UnitOfWork(new DBConnectionFactory(_dbConnectionModel));
+            var storageresult =  Storage.Create(Guid.NewGuid(), FirstStorageName, "");
+            var _dummyStorage = storageresult.Result;
 
 
-        //}
+            //Act
+            await _unitOfWork.StorageRepository.Add(_dummyStorage!);
+            _unitOfWork.Commit();
+            _dummyStorage!.UpdateStorageName(ChangedStorageName);
+
+            await _unitOfWork.StorageRepository.Update(_dummyStorage!);
+            _unitOfWork.Commit();
+            var queryStorage = await _unitOfWork.StorageRepository.GetAll();
 
 
-        //[Theory]
-        //[InlineData("TestStorage")]
-        //public async Task ArticleRepository_Create_Delete_Returns_EmptyList(string FirstStorageName)
-        //{
-        //    //Arrange
-        //    IStorageRepository _refStorageRepository = new StorageRepository(_dbConfig.DBConnectionString, new SerilogLoggerFactory(Log.Logger).CreateLogger<StorageRepository>());
-        //    Storage _dummyStorage = new Storage() { StorageName = FirstStorageName };
+            //Assert
+            Assert.NotNull(queryStorage);
+            Assert.Equal(queryStorage[0].Name, ChangedStorageName);
 
 
-        //    //Act
-        //    var storage = await _refStorageRepository.CreateStorage(_dummyStorage);
-        //    await _refStorageRepository.DeleteStorage(storage.ID);
-        //    var queryStorage = await _refStorageRepository.GetAll();
+        }
 
 
-        //    //Assert
-        //    Assert.Empty(queryStorage);
-
-        //}
-
-        //[Theory]
-        //[InlineData("TestStorage")]
-        //public async Task StorageRepository_Create_ReturnsbyID_SingleArticle(string StorageName)
-        //{
-        //    //Arrange
-        //    IStorageRepository _refStorageRepository = new StorageRepository(_dbConfig.DBConnectionString, new SerilogLoggerFactory(Log.Logger).CreateLogger<StorageRepository>());
-        //    Storage _dummyStorage = new Storage() { StorageName = StorageName };
+        [Theory]
+        [InlineData("TestStorage")]
+        public async Task Create_Delete_Returns_EmptyList(string FirstStorageName)
+        {
+            //Arrange
+            IUnitofWork _unitOfWork = new UnitOfWork(new DBConnectionFactory(_dbConnectionModel));
+            var storageresult = Storage.Create(Guid.NewGuid(), FirstStorageName, "");
+            var _dummyStorage = storageresult.Result;
 
 
-        //    //Act
-        //    var storage = await _refStorageRepository.CreateStorage(_dummyStorage);
+            //Act
+            await _unitOfWork.StorageRepository.Add(_dummyStorage!);
+            _unitOfWork.Commit();
+            var queryList = await _unitOfWork.StorageRepository.GetAll();
+            await _unitOfWork.StorageRepository.Delete(_dummyStorage!);
+            _unitOfWork.Commit();
+            queryList = await _unitOfWork.StorageRepository.GetAll();
 
-        //    var querybyID = await _refStorageRepository.GetStoragebyID(storage.ID);
 
-        //    //Assert 
-        //    Assert.NotNull(querybyID);
+            //Assert
+            Assert.Empty(queryList);
 
-        //}
+        }
+
     }
 
 

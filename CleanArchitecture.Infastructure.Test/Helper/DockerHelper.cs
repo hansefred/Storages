@@ -9,8 +9,7 @@ namespace CleanArchitecture.Infastructure.Test.Helper
     {
         public static async Task<IContainer?> CreateDockerDatabase(IDBConnectionModel dBConfig)
         {
-            try
-            {
+
                 var dockerContainer = new ContainerBuilder()
                     .WithName(Guid.NewGuid().ToString("D"))
                     .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
@@ -24,12 +23,7 @@ namespace CleanArchitecture.Infastructure.Test.Helper
                 await dockerContainer.StartAsync();
                 
                 return dockerContainer;
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error("Cannot create Docker SQL Database: {ex}", ex);
-                return null;
-            }
+           
         }
     }
 }
