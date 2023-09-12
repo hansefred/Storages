@@ -4,7 +4,7 @@ namespace CleanArchitecture.Domain.Entities;
 
 public class StorageArticle : Entity
 {
-    private StorageArticle(): base(Guid.NewGuid())
+    private StorageArticle(): base(Guid.Empty)
     {
         ArticleName = "";
         Description = "";
