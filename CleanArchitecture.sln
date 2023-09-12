@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Application", "CleanArchitecture.Application\CleanArchitecture.Application.csproj", "{EFF7F199-283E-4F28-B940-08D7BD95F0DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Infastructure", "CleanArchitecture.Infastructure\CleanArchitecture.Infastructure.csproj", "{9A07BFD5-6DF1-4251-9D43-7BE7C1B19663}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Infrastructure", "CleanArchitecture.Infastructure\CleanArchitecture.Infrastructure.csproj", "{9A07BFD5-6DF1-4251-9D43-7BE7C1B19663}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.API", "CleanArchitecture.API\CleanArchitecture.API.csproj", "{68E97C8D-0C7F-484B-82F5-D3811A31CE5B}"
 EndProject
@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "StorageDatabase", "StorageDatabase\StorageDatabase.sqlproj", "{5A2C08D6-78CD-45EF-A2C2-0C3A8820684D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.Infastructure.Test", "CleanArchitecture.Infastructure.Test\CleanArchitecture.Infastructure.Test.csproj", "{85FEE614-EB8A-490C-9746-6F973D9B170F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Infrastructure.Test", "CleanArchitecture.Infastructure.Test\CleanArchitecture.Infrastructure.Test.csproj", "{85FEE614-EB8A-490C-9746-6F973D9B170F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

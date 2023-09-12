@@ -6,9 +6,9 @@ using CleanArchitecture.Infastructure.Test.Helper;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Infastructure.Common;
-using CleanArchitecture.Infastructure.Repositories;
+using CleanArchitecture.Infrastructure.Repositories;
 
-namespace CleanArchitecture.Infastructure.Test
+namespace CleanArchitecture.Infrastructure.Test
 {
 
 
@@ -181,6 +181,61 @@ namespace CleanArchitecture.Infastructure.Test
             Assert.Equal(articleName, storages[0].StorageArticles[0].ArticleName);
             Assert.Equal(articleDescription, storages[0].StorageArticles[0].Description);
 
+        }
+
+        [Theory]
+        [InlineData("FirstName", "FirstDescription", "ArticleName", "ArticleDescription")]
+        public async Task Delete_Articles_ValidValues_ReturnsNoArticle(string name, string description, string articleName, string articleDescription)
+        {
+            //Arrange
+            IUnitofWork _unitOfWork = new UnitOfWork(new DBConnectionFactory(_dbConnectionModel));
+            var result = Storage.Create(Guid.NewGuid(), name, description);
+            var storage = result.Result;
+            storage!.AddArticleToStorage(Guid.NewGuid(), articleName, articleDescription);
+
+
+            //Act
+            await _unitOfWork.StorageRepository.Add(storage!);
+            _unitOfWork.Commit();
+            var storages = await _unitOfWork.StorageRepository.GetAll();
+            storage = storages[0];
+            storage.RemoveArticleFromStorage(storage.StorageArticles[0].Id);
+            await _unitOfWork.StorageRepository.Update(storage);
+            _unitOfWork.Commit();
+            storages = await _unitOfWork.StorageRepository.GetAll();
+
+
+            //Assert
+            Assert.Single(storages);
+            Assert.Empty(storages[0].StorageArticles);
+        }
+
+        [Theory]
+        [InlineData("FirstName", "FirstDescription", "ArticleName", "ArticleDescription", "ChangedArticleDescription")]
+        public async Task Update_ArticleName_ValidValues_ReturnsArticle(string name, string description, string articleName, string articleDescription, string changedArticleName)
+        {
+            //Arrange
+            IUnitofWork _unitOfWork = new UnitOfWork(new DBConnectionFactory(_dbConnectionModel));
+            var result = Storage.Create(Guid.NewGuid(), name, description);
+            var storage = result.Result;
+            storage!.AddArticleToStorage(Guid.NewGuid(), articleName, articleDescription);
+
+
+            //Act
+            await _unitOfWork.StorageRepository.Add(storage!);
+            _unitOfWork.Commit();
+            var storages = await _unitOfWork.StorageRepository.GetAll();
+            storage = storages[0];
+            storage.StorageArticles[0].UpdateStorageArticleName(changedArticleName);
+            await _unitOfWork.StorageRepository.Update(storage);
+            _unitOfWork.Commit();
+            storages = await _unitOfWork.StorageRepository.GetAll();
+
+
+            //Assert
+            Assert.Single(storages);
+            Assert.Single(storages[0].StorageArticles);
+            Assert.Equal(changedArticleName, storages[0].StorageArticles[0].ArticleName);
         }
 
     }

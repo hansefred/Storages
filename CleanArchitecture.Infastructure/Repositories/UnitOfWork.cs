@@ -2,7 +2,7 @@
 using CleanArchitecture.Infastructure.Common;
 using System.Data;
 
-namespace CleanArchitecture.Infastructure.Repositories
+namespace CleanArchitecture.Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitofWork, IDisposable
     {

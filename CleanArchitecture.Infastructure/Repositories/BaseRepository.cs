@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace CleanArchitecture.Infastructure.Repositories
+namespace CleanArchitecture.Infrastructure.Repositories
 {
     internal class BaseRepository
     {

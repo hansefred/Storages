@@ -91,7 +91,27 @@ public class Storage : AggregateRoot
         return TResult<Storage>.OnError(result.DomainException!);
     }
 
-    
+
+
+    /// <summary>
+    /// Remove a article from storage 
+    /// </summary>
+    /// <param name="id">ID of the Article/param>
+    /// <returns>Returns a <see cref="ITResult{Entity}"/> from Type <see cref="Storage"/>, contains error or entity, check Success Property</returns>
+    public ITResult<Storage> RemoveArticleFromStorage(Guid id)
+    {
+        var article = _articles.FirstOrDefault(o => o.Id == id);
+        if (article is not null)
+        {
+            var result = _articles.Remove(article);
+        }
+
+
+       return TResult<Storage>.OnSuccess(this);
+        
+    }
+
+
     /// <summary>
     /// Update Description of existing Storage
     /// </summary>

@@ -2,10 +2,9 @@
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Infastructure.Exeptions;
 using Dapper;
-using Microsoft.Identity.Client.Extensions.Msal;
 using System.Data;
 
-namespace CleanArchitecture.Infastructure.Repositories
+namespace CleanArchitecture.Infrastructure.Repositories
 {
     internal class StorageArticleRepository : BaseRepository, IStorageArticleRepository
     {
@@ -53,7 +52,7 @@ namespace CleanArchitecture.Infastructure.Repositories
         public async Task<StorageArticle?> GetById(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await Connection.QueryAsync<StorageArticle>("Select Id, Name, Description FROM [dbo].[StorageArticle] Where Id = @Id",
-                        new { Id = id }, transaction: Transaction);
+                        new { Id = id });
             return result.FirstOrDefault();
         }
 

@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Infastructure.Common;
-using CleanArchitecture.Infastructure.Repositories;
+using CleanArchitecture.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -9,7 +9,7 @@ namespace CleanArchitecture.Infastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfastructure(this IServiceCollection services, Action<IDBConnectionModel> action)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, Action<IDBConnectionModel> action)
     {
         services.Configure(action);
         services.AddScoped<IUnitofWork, UnitOfWork>();

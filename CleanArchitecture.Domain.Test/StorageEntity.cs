@@ -92,13 +92,13 @@ namespace CleanArchitecture.Domain.Test
 
         [Theory]
         [InlineData("raw weed", "for making some cakes")]
-        public void AddArticleToStorage_ValidValues_ReturnEntity(string articlename, string articledescription)
+        public void AddArticleToStorage_ValidValues_ReturnEntity(string articleName, string articleDescription)
         {
             //Arrange
             var storage = Storage.Create(Guid.NewGuid(), "storagename", "storagedescription").Result!;
 
             //Act
-            var result = storage.AddArticleToStorage(articlename, articledescription);
+            var result = storage.AddArticleToStorage(Guid.NewGuid(), articleName, articleDescription);
 
             //Assert
             Assert.True(result.IsSuccess);
@@ -107,20 +107,20 @@ namespace CleanArchitecture.Domain.Test
             Assert.NotNull(result.Result.StorageArticles.First());
 
             var article = result.Result.StorageArticles.First();
-            Assert.Equal(articlename, article.ArticleName);
-            Assert.Equal(articledescription, article.Description);
+            Assert.Equal(articleName, article.ArticleName);
+            Assert.Equal(articleDescription, article.Description);
             Assert.Equal(storage, article.Storage);
         }
 
         [Theory]
         [InlineData("raw weed", "")]
-        public void AddArticleToStorage_EmptyArticleDescription_ReturnEntity(string articlename, string articledescription)
+        public void AddArticleToStorage_EmptyArticleDescription_ReturnEntity(string articleName, string articleDescription)
         {
             //Arrange
             var storage = Storage.Create(Guid.NewGuid(), "storagename", "storagedescription").Result!;
 
             //Act
-            var result = storage.AddArticleToStorage(articlename, articledescription);
+            var result = storage.AddArticleToStorage(Guid.NewGuid(),articleName, articleDescription);
 
             //Assert
             Assert.True(result.IsSuccess);
@@ -129,20 +129,20 @@ namespace CleanArchitecture.Domain.Test
             Assert.NotNull(result.Result.StorageArticles.First());
 
             var article = result.Result.StorageArticles.First();
-            Assert.Equal(articlename, article.ArticleName);
-            Assert.Equal(articledescription, article.Description);
+            Assert.Equal(articleName, article.ArticleName);
+            Assert.Equal(articleDescription, article.Description);
             Assert.Equal(storage, article.Storage);
         }
 
         [Theory]
         [InlineData("weed", "for making some cakes")]
-        public void AddArticleToStorage_ArticleNametoShort_ReturnError(string articlename, string articledescription)
+        public void AddArticleToStorage_ArticleNameToShort_ReturnError(string articleName, string articleDescription)
         {
             //Arrange
             var storage = Storage.Create(Guid.NewGuid(), "storagename", "storagedescription").Result!;
 
             //Act
-            var result = storage.AddArticleToStorage(articlename, articledescription);
+            var result = storage.AddArticleToStorage(Guid.NewGuid(),articleName, articleDescription);
 
             //Assert
             Assert.False(result.IsSuccess);
@@ -153,13 +153,13 @@ namespace CleanArchitecture.Domain.Test
 
         [Theory]
         [InlineData("Wheat with a lot of flavor and well suited for soups and breads", "for making some cakes")]
-        public void AddArticleToStorage_ArticleNametoLong_ReturnError(string articlename, string articledescription)
+        public void AddArticleToStorage_ArticleNameToLong_ReturnError(string articleName, string articleDescription)
         {
             //Arrange
             var storage = Storage.Create(Guid.NewGuid(), "storagename", "storagedescription").Result!;
 
             //Act
-            var result = storage.AddArticleToStorage(articlename, articledescription);
+            var result = storage.AddArticleToStorage(Guid.NewGuid(), articleName, articleDescription);
 
             //Assert
             Assert.False(result.IsSuccess);
@@ -170,13 +170,13 @@ namespace CleanArchitecture.Domain.Test
 
         [Theory]
         [InlineData("raw weed" , "you can bake very good bread with it, but is it suitable for pizzas, i love a lot of pepperoni and salami with extra cheese on the pizza. The best way to eat pizza is with your best friends on a nice summer day.")]
-        public void AddArticleToStorage_ArticleDescriptiontoLong_ReturnError(string articlename, string articledescription)
+        public void AddArticleToStorage_ArticleDescriptionToLong_ReturnError(string articleName, string articleDescription)
         {
             //Arrange
             var storage = Storage.Create(Guid.NewGuid(), "storagename", "storagedescription").Result!;
 
             //Act
-            var result = storage.AddArticleToStorage(articlename, articledescription);
+            var result = storage.AddArticleToStorage(Guid.NewGuid(),articleName, articleDescription);
 
             //Assert
             Assert.False(result.IsSuccess);

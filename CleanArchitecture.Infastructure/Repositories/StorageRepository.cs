@@ -4,7 +4,7 @@ using CleanArchitecture.Infastructure.Exeptions;
 using Dapper;
 using System.Data;
 
-namespace CleanArchitecture.Infastructure.Repositories
+namespace CleanArchitecture.Infrastructure.Repositories
 {
     internal class StorageRepository : BaseRepository, IStorageRepository
     {
@@ -63,7 +63,7 @@ namespace CleanArchitecture.Infastructure.Repositories
         {
 
             var storageDictionary = new Dictionary<Guid, Storage>();
-            var result = await Connection.QueryAsync<Storage, StorageArticle, Storage>("SELECT Storage.Id, Storage.Name, Storage.Description, StorageArticle.Id AS Split,StorageArticle.Name AS ArticleName,StorageArticle.Description FROM [TestDB].[dbo].[Storage] AS Storage LEFT JOIN [TestDB].[dbo].[StorageArticle] AS StorageArticle ON Storage.Id = StorageArticle.Storage_Id",
+            var result = await Connection.QueryAsync<Storage, StorageArticle, Storage>("SELECT Storage.Id, Storage.Name, Storage.Description, StorageArticle.Id AS Split,StorageArticle.Id,StorageArticle.Name AS ArticleName,StorageArticle.Description FROM [TestDB].[dbo].[Storage] AS Storage LEFT JOIN [TestDB].[dbo].[StorageArticle] AS StorageArticle ON Storage.Id = StorageArticle.Storage_Id",
                                                                (s, a) =>
                                                                {
                                                                    Storage? storageQuery;
@@ -100,7 +100,7 @@ namespace CleanArchitecture.Infastructure.Repositories
         {
 
             var storageDictionary = new Dictionary<Guid, Storage>();
-            var result = await Connection.QueryAsync<Storage, StorageArticle?, Storage>("SELECT Storage.Id, Storage.Name, Storage.Description, StorageArticle.Id AS Split,StorageArticle.Name AS ArticleName,StorageArticle.Description FROM [TestDB].[dbo].[Storage] AS Storage LEFT JOIN [TestDB].[dbo].[StorageArticle] AS StorageArticle ON Storage.Id = StorageArticle.Storage_Id Where Storage.Id = @Id",
+            var result = await Connection.QueryAsync<Storage, StorageArticle, Storage>("SELECT Storage.Id, Storage.Name, Storage.Description, StorageArticle.Id AS Split,StorageArticle.Id ,StorageArticle.Name AS ArticleName,StorageArticle.Description FROM [TestDB].[dbo].[Storage] AS Storage LEFT JOIN [TestDB].[dbo].[StorageArticle] AS StorageArticle ON Storage.Id = StorageArticle.Storage_Id Where Storage.Id = @Id",
                                                               (s, a) =>
                                                               {
                                                                   Storage? storageQuery;

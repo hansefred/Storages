@@ -15,8 +15,6 @@ public abstract class Entity : IEquatable<Entity>
         if (obj is null)
             return false;
         
-        if (obj.GetType() != typeof (Entity))
-            return false;
         
         if (obj is not Entity entity)
             return false;
